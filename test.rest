@@ -7,6 +7,19 @@ GET http://localhost:3000/data
 ### Index Route
 GET http://localhost:3000/index
 
+### Login
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "password123"
+}
+### Get Data (replace <TOKEN> with JWT from login)
+GET http://localhost:3000/data
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsImlhdCI6MTc2MzUwNTY2OCwiZXhwIjoxNzYzNTA5MjY4fQ.fIxkRxoSIezEh9e4N1hxGAayo25CvMKQp6A3rTR5dvo
+
+
 ### POST new data
 POST http://localhost:3000/data
 Content-Type: application/json
