@@ -3,15 +3,31 @@ const app = express();
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 
+const { router: dataRouter, verifyToken } = require("./api/data");
+const homeRouter = require("./api/home");
+const indexRouter = require("./api/index");
+const loginRouter = require("./api/login"); 
+const rateLimit = require("express-rate-limit");
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,
+  message: { error: "Too many login attempts, please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // Middleware
 app.use(express.json());
 
 // Routes
-const dataRouter = require("./api/data.js");
-app.use("/data", dataRouter);
+app.use("/", homeRouter);
+app.use("/index", indexRouter);
+app.use("/data", verifyToken, dataRouter);
+app.use("/login", loginRouter);
 
 // Swagger
-const swaggerDocument = YAML.load("./openapi.yaml"); // make sure the file is named openapi.yaml
+const swaggerDocument = YAML.load("./openapi.yaml");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Start server

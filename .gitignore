@@ -1,8 +1,15 @@
-# Ignore node_modules folder
+# Node modules
 node_modules/
 
-# Optional: ignore logs
+# Logs
 *.log
 
-# Optional: ignore environment files
+# Environment files
 .env
+
+# Build / coverage
+dist/
+coverage/
+
+# Zip files
+*.zip

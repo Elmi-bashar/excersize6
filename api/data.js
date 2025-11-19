@@ -1,11 +1,26 @@
 const express = require("express");
 const router = express.Router();
+const jwt = require("jsonwebtoken");
+
 
 // In-memory database
 const data = [
   { id: 1, firstname: "Tim", surname: "Berners-Lee" },
   { id: 2, firstname: "Roy", surname: "Fielding" }
 ];
+function verifyToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, "SECRET_KEY", (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+}
+
+
 
 // GET /data - return all data
 router.get("/", (req, res) => {
@@ -76,5 +91,8 @@ router.post("/search", (req, res) => {
   res.status(200).json(results);
 });
 
-module.exports = router;
-module.exports.data = data; // Export data array for app.js if needed
+module.exports = {
+  router,       // your router
+  verifyToken,  // the middleware function
+  data          // optional if needed
+};
